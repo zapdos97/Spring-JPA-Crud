@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:validator="http://www.springmodules.org/validation/bean/validator"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springmodules.org/validation/bean/validator http://www.springmodules.org/validation/bean/validator-2.0.xsd">
+<context:annotation-config/>
+	<context:component-scan base-package="com.*"></context:component-scan>
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/view/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+     <!-- Spring Form Validation -->
+   <!--   <bean id="configurationloader" 
+  class="org.springmodules.validation.bean.conf.loader.annotation.AnnotationBeanValidationConfigurationLoader">
+    </bean>
+ <bean id="validator" class="org.springmodules.validation.bean.BeanValidator"
+ p:configurationLoader-ref="configurationloader">
+ </bean> -->
+ <!--  Oracle Connectivity -->
+ 
+ <bean id="dataSource" 
+ class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/> 
+<property name="url" value="jdbc:oracle:thin:@localhost:1521:XE"/>
+<property name="username" value="vishnu"/>
+<property name="password" value="root"/>
+ </bean>
+ <!-- Entity Manager -->
+ <bean id="entityManagerFactory" 
+ class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+ <property name="dataSource" ref="dataSource"/>
+ <property name="packagesToScan" value="com.cg.mypaymentapp.beans"/>
+ <property name="persistenceProviderClass" 
+ value="org.hibernate.jpa.HibernatePersistenceProvider"/>
+ <property name="jpaPropertyMap">
+ <map>
+ <entry key="hibernate.dialect" value="org.hibernate.dialect.OracleDialect"></entry>
+<!-- <entry key="hibernate.hbm2ddl.auto" value="update"></entry>  -->
+ <entry key="hibernate.show_sql" value="true"></entry>
+  </map>
+ </property>
+ </bean>
+ <!-- transaction manager -->
+ <bean id="transactionManager" 
+ class="org.springframework.orm.jpa.JpaTransactionManager">
+ <property name="entityManagerFactory" ref="entityManagerFactory"/>
+ </bean>
+ <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>
